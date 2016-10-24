@@ -1,0 +1,10 @@
+<launch>
+    <group ns="control">
+        <node name="caster" pkg="robot_control" type="caster.py" output="screen">
+
+        </node>
+        <node name="controler" pkg="robot_control" type="controler.py" args="live_cam_tool" output="screen">
+
+        </node>
+    </group>
+</launch>
