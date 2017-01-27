@@ -1,0 +1,8 @@
+<launch>
+    <group ns="robot_caster">
+        <node pkg="tf" type="static_transform_publisher" name="base_publisher" args="0 0 0 0 0 0 /world /robot_base 10" />
+        <node name="caster" pkg="robot_control" type="caster.py" output="screen" />
+        <node pkg="tf" type="static_transform_publisher" name="camera_publisher" args="120.8 4.8 67.4 0.01907 0.00184 0.71634 0.69748 /tcp /camera 10" />
+        <node pkg="tf" type="static_transform_publisher" name="gripper_publisher" args="2.2 0.3 298.1 0 0 0 1 /tcp /gripper 10" />
+    </group>
+</launch>
