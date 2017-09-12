@@ -1,0 +1,18 @@
+<launch>
+    <arg name="robot_ns" default="iiwa"/>
+    <arg name="bridge_ns" default="bridge"/>
+    <arg name="mps" default="25.0"/>
+    <arg name="wrench_topic" default="state/CartesianWrench"/>
+    <arg name="pose_topic" default="state/CartesianPose"/>
+    <arg name="joint_topic" default="state/JointPosition"/>
+    <group ns="$(arg bridge_ns)">
+        <node name="throttle_cart_wrench" pkg="topic_tools" type="throttle" args="messages /$(arg robot_ns)/$(arg wrench_topic) $(arg mps) /$(arg bridge_ns)/$(arg wrench_topic)"/>
+        <node name="throttle_cart_pos" pkg="topic_tools" type="throttle" args="messages /$(arg robot_ns)/$(arg pose_topic) $(arg mps) /$(arg bridge_ns)/$(arg pose_topic)"/>
+        <node name="throttle_joint_pos" pkg="topic_tools" type="throttle" args="messages /$(arg robot_ns)/$(arg joint_topic) $(arg mps) /$(arg bridge_ns)/$(arg joint_topic)"/>
+        <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"> 
+            <arg name="port" value="9090"/>
+            <arg name="address" value="192.168.1.40"/>
+            <arg name="topics_glob" value="[/$(arg bridge_ns)/*]"/>
+        </include>
+    </group>    
+</launch>

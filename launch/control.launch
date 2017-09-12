@@ -1,10 +1,22 @@
 <launch>
-    <group ns="control">
-        <node name="caster" pkg="robot_control" type="caster.py" output="screen">
-
+    <arg name="tool_config_path" default="/home/ondrej/share/robot_info/tool_cfg/"/>
+    <arg name="tool_name" default=""/>
+    <arg name="bridge_ns" default="bridge"/>
+    <group ns="iiwa">
+        <param name="toolName" type="str" value="$(arg tool_name)" />
+    </group>
+    <group ns="controller">
+        <node pkg="tf" type="static_transform_publisher" name="base_publisher" args="0 0 0 0 0 0 /world /robot_base 10" />
+        <node name="caster" pkg="robot_control" type="caster.py" required="true" output="screen">
+            <param name="tool_config_path" value="$(arg tool_config_path)" />
+            <param name="tool_name" value="$(arg tool_name)" />
         </node>
-        <node name="controler" pkg="robot_control" type="controler.py" args="live_cam_tool" output="screen">
-
+        <node name="commander" pkg="robot_control" type="commander.py" output="screen">
+            <param name="bridge_ns" value="$(arg bridge_ns)" />
         </node>
     </group>
+
+    <include file="$(find robot_control)/launch/rosbridge_throttle.launch"> 
+        <arg name="bridge_ns" value="$(arg bridge_ns)"/>
+    </include>
 </launch>
